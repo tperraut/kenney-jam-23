@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://1rty3sexdag7"]
+
+[ext_resource type="Texture2D" uid="uid://ckuiqxj20pdmy" path="res://assets/vector_characters.svg" id="1_6bthh"]
+[ext_resource type="Script" path="res://Ennemy.gd" id="1_yqba8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6xmoh"]
+radius = 300.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4gtad"]
+resource_name = "hitbox"
+size = Vector2(30, 41)
+
+[node name="Enemy" type="CharacterBody2D"]
+script = ExtResource("1_yqba8")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_6xmoh")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_6bthh")
+hframes = 2
+frame = 1
+region_enabled = true
+region_rect = Rect2(0, 860, 236, 88)
+region_filter_clip_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3, -0.5)
+shape = SubResource("RectangleShape2D_4gtad")
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

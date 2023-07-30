@@ -1,0 +1,70 @@
+[gd_scene load_steps=9 format=3 uid="uid://btjty383ts8ii"]
+
+[ext_resource type="Script" path="res://bullet.gd" id="1_2rflj"]
+[ext_resource type="Texture2D" uid="uid://h08enlkr4u10" path="res://assets/topdownTanks_vector.svg" id="2_vf3wo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5qn05"]
+size = Vector2(6, 2)
+
+[sub_resource type="Gradient" id="Gradient_x6a8u"]
+offsets = PackedFloat32Array(0, 0.609071, 1)
+colors = PackedColorArray(0.72549, 0, 0, 1, 0.836954, 0.168788, 0.179935, 1, 1, 0.415686, 0.443137, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nj1a1"]
+gradient = SubResource("Gradient_x6a8u")
+
+[sub_resource type="Curve" id="Curve_7yg37"]
+max_value = 2.0
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.275, 2), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_escjd"]
+curve = SubResource("Curve_7yg37")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4ddmv"]
+lifetime_randomness = 1.0
+particle_flag_disable_z = true
+direction = Vector3(-1, 0, 0)
+spread = 15.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 300.57
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+damping_min = 500.0
+damping_max = 500.0
+scale_curve = SubResource("CurveTexture_escjd")
+color_ramp = SubResource("GradientTexture1D_nj1a1")
+
+[node name="Bullet" type="RigidBody2D"]
+z_index = 10
+mass = 10.0
+gravity_scale = 0.0
+max_contacts_reported = 1
+contact_monitor = true
+script = ExtResource("1_2rflj")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = -1.5708
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_vf3wo")
+offset = Vector2(0, 2)
+region_enabled = true
+region_rect = Rect2(368, 276, 8, 27)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_5qn05")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="BloodParticule" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_4ddmv")
+one_shot = true
+explosiveness = 1.0
+randomness = 0.2
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
